@@ -1,41 +1,24 @@
-import docx
+import random
+
+chars = 'qwertyuiopasdfghjkl;zxcvbnm,.1234567890'
 
 
-def docx_faker(size=1024):
+def get_string(size=1024):
+    string = [random.choice(chars) for _ in range(size)]
+    return ''.join(string)
+
+
+def file_faker(size=1024, fName='result', fType='docx'):
     """Parameters:
-        size: the size of the documents u want (KB).
+        size: the size of the document u want (KB).
+        fName: the name of the document u want.
+        fType: the type of the document u want, e.g. docx.
     Returns: None
-    Results: generate a fake file with the format of docx.
+    Results: generate a fake file.
     """
-    pass
-
-
-def xlsx_faker(size=1024):
-    """Parameters:
-        size: the size of the documents u want (KB).
-    Returns: None
-    Results: generate a fake file with the format of xlsx.
-    """
-    pass
-
-
-def pptx_faker(size=1024):
-    """Parameters:
-        size: the size of the documents u want (KB).
-    Returns: None
-    Results: generate a fake file with the format of pptx.
-    """
-    pass
-
-
-def pdf_faker(size=1024):
-    """Parameters:
-        size: the size of the documents u want (KB).
-    Returns: None
-    Results: generate a fake file with the format of pdf.
-    """
-    pass
+    with open(f'{fName}.{fType}', 'w') as fd:
+        fd.write(get_string(1024 * size))
 
 
 if __name__ == "__main__":
-    pass
+    file_faker()
