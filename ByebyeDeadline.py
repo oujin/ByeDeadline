@@ -4,15 +4,34 @@ from PyQt5.QtWidgets import QVBoxLayout, QHBoxLayout, QLabel
 from PyQt5.QtWidgets import QFileDialog, QDialog, QSpinBox
 from PyQt5.QtGui import QIcon
 from PyQt5.QtCore import QSize, Qt
-from faker import file_faker
 import random
+
+
+class Faker(object):
+    def __init__(self):
+        self.chars = 'qwertyuiopasdfghjkl;zxcvbnm,.1234567890'
+
+    def get_string(self, size=1024):
+        string = [random.choice(self.chars) for _ in range(size)]
+        return ''.join(string)
+
+    def file_faker(self, size=1024, fName='result', fType='docx'):
+        """Parameters:
+            size: the size of the document u want (KB).
+            fName: the name of the document u want.
+            fType: the type of the document u want, e.g. docx.
+        Returns: None
+        Results: generate a fake file.
+        """
+        with open(f'{fName}.{fType}', 'w') as fd:
+            fd.write(self.get_string(1024 * size))
 
 
 class UI(QWidget):
     def __init__(self):
         super().__init__()
         self.setFixedSize(500, 400)
-        self.setWindowIcon(QIcon('src/icon.png'))
+        self.setWindowIcon(QIcon('src/icon.ico'))
         self.setWindowTitle('ByeDeadline')
         self.doc_button = QPushButton()
         self.doc_button.setIcon(QIcon('src/doc.png'))
@@ -41,6 +60,8 @@ class UI(QWidget):
         self.layer3.addLayout(self.layer2)
         self.setLayout(self.layer3)
 
+        self.faker = Faker()
+
     def pushButton(self, fType):
         fName = QFileDialog.getSaveFileName(self, 'save', './', f'*.{fType}')
         if fName[0] == '':
@@ -61,7 +82,8 @@ class UI(QWidget):
         def clickOK():
             size = spinBox.value() + random.randint(-99, 99)
             size = max(1, size)
-            file_faker(size, fName, fType)
+            self.faker.file_faker(size, fName, fType)
+            dialog.close()
 
         okButton.clicked.connect(clickOK)
         layer1 = QHBoxLayout()
@@ -75,6 +97,7 @@ class UI(QWidget):
         layer3.addLayout(layer2)
         dialog.setLayout(layer3)
         dialog.exec()
+        print(666)
 
 
 if __name__ == "__main__":
